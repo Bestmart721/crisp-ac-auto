@@ -70,8 +70,18 @@ const addOrUpdateContact = contactData => {
     } else {
       console.log('AC: Adding ' + contactData.email + ' ...')
       // Contact does not exist, add a new contact
-      ACInstance.post('/contacts', { contact: contactData }).then(() => {
-        console.log('AC: Added ' + contactData.email + ' successfully.');
+      ACInstance.post('/contacts', { contact: contactData }).then((res) => {
+        var listId = 1;
+        var contactId = res.data.contact.id
+        ACInstance.post('/contactLists', {
+          contactList: {
+            list: listId,
+            contact: contactId,
+            status: 1
+          }
+        }).then(() => {
+          console.log('AC: Added ' + contactData.email + ' to ' + listId + ' list successfully.');
+        })
       }).catch(err => {
         // console.log(err)
       })
